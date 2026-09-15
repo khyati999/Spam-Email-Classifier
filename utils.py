@@ -1,10 +1,14 @@
 import pickle
+from pathlib import Path
 
-cv=pickle.load(open('models/cv.pkl', 'rb'))    
-clf=pickle.load(open('models/clf.pkl', 'rb'))
+MODEL_DIR = Path(__file__).resolve().parent / 'models'
+
+with (MODEL_DIR / 'cv.pkl').open('rb') as model_file:
+    cv = pickle.load(model_file)
+
+with (MODEL_DIR / 'clf.pkl').open('rb') as model_file:
+    clf = pickle.load(model_file)
 
 def make_prediction(email):
     tokenized_email = cv.transform([email])
-    prediction = clf.predict(tokenized_email)
-    prediction = 1 if prediction == 1 else -1
-    return prediction
+    return 1 if int(clf.predict(tokenized_email)[0]) == 1 else -1
